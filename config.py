@@ -28,13 +28,18 @@ from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+import os
+import subprocess
+from libqtile import hook
 
 mod = "mod4"
-terminal = 'alacritty'
+terminal = "alacritty"
 
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
+
+    
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -67,10 +72,54 @@ keys = [
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    
+    # Run apps
+    Key([mod], "f", lazy.spawn('firefox')),
+    Key([mod], "t", lazy.spawn('thunar')),
+    Key([mod], "d", lazy.spawn('rofi -show drun')),
+    Key([], "Print", lazy.spawn('flameshot gui')),
+
+    # Media
+     #Key([], "XF86AudioMute", lazy.spawn("amixer -q set Master toggle")),
+     #Key([], "XF86AudioLowerVolume", lazy.spawn("amixer -q set Master 5%-")),
+     #Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer -q set Master 5%+")),
+
+     Key([], "XF86AudioPlay", lazy.spawn("playerctl play-pause")),
+     Key([], "XF86AudioNext", lazy.spawn("playerctl next")),
+     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous")),
+     Key([], "XF86AudioStop", lazy.spawn("playerctl stop")),
+     
+    # Key([], " XF86Lock", lazy.spawn("dm-tool lock")),
+    Key([mod], "n", lazy.layout.normalize()),
+
+    # RESIZE UP, DOWN, LEFT, RIGHT
+    Key([mod, "control"], "l",
+        lazy.layout.grow_left(),
+        lazy.layout.grow(),
+        lazy.layout.increase_ratio(),
+        lazy.layout.delete(),
+        ),
+    Key([mod, "control"], "h",
+        lazy.layout.grow_right(),
+        lazy.layout.shrink(),
+        lazy.layout.decrease_ratio(),
+        lazy.layout.add(),
+        ),
+    Key([mod, "control"], "k",
+        lazy.layout.grow_down(),
+        lazy.layout.grow(),
+        lazy.layout.decrease_nmaster(),
+        ),
+    Key([mod, "control"], "j",
+        lazy.layout.grow_up(),
+        lazy.layout.shrink(),
+        lazy.layout.increase_nmaster(),
+        ),
+
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -99,14 +148,22 @@ for i in groups:
         ]
     )
 
+    layout_theme={
+        "border_width": 4,
+        "margin" : 15,
+        "border_focus": "#9900cc",
+        "border_normal": "#666699"
+        }
+
 layouts = [
-    layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
-    layout.Max(),
+    #layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
-    # layout.MonadTall(),
+    layout.MonadTall(**layout_theme),
+    layout.Max(),
+    # layout.Floating(),
     # layout.MonadWide(),
     # layout.RatioTile(),
     # layout.Tile(),
@@ -119,41 +176,82 @@ widget_defaults = dict(
     font="sans",
     fontsize=12,
     padding=3,
+    background='#666699',
 )
 extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        bottom=bar.Bar(
+        top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
+                widget.Sep(
+                    linewidth=1,
+                    padding = 10,
+                    foreground = '#9900ff',
+                    background= '#9900ff',),
+
+                widget.Image(
+                    filename = "~/.config/qtile/qtilelogo.png",
+                    iconsize = 9,
+                    background= '#9900cc',
+                    mouse_callbacks = {
+                        'Button1':lambda : lazy.spawn(
+                            'rofi -show drun'
+                            )
+                        }
+                    ),
+
+                # widget.CurrentLayout(),
+
+                widget.GroupBox(
+                    background='#9900cc',
+                    foreground='#ffcccc',),
+
                 widget.Prompt(),
+
                 widget.WindowName(),
+
                 widget.Chord(
                     chords_colors={
                         "launch": ("#ff0000", "#ffffff"),
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+
+                #widget.Backlight(
+                    #background='ffffff',
+                    #foreground='000000',
+                    #backlight_name='amdgpu_bll',
+                    #brightness_file='/sys/class/backlight/amdgpu_bll/brightness',
+               # ),
+
+                #widget.BatteryIcon(),
+                #widget.Battery(
+                    #background='#cc0000',
+                    #foreground='#ffff99',
+                    #notify_below='20%'
+                    #),
+
+                #widget.Clipboard(width=10),
+                
+
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
-                widget.Systray(),
-                #widget.Backlight(),
-                widget.Sep(linewidth=2),
-                widget.Battery(),
-                widget.BatteryIcon(),
-                widget.Sep(linewidth=2),
-                widget.Volume(),
-                widget.Sep(linewidth=2),
-                widget.Bluetooth(),
-                widget.Sep(linewidth=2),
-                widget.Wlan(),
-                widget.Sep(linewidth=2),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+
+                widget.CurrentLayout(),
+
+                widget.Systray(
+                    background='#66ccff',
+                    ),
+
+                widget.Clock(format="%d-%m-%Y %a %H:%M:%S",
+                             background='#9900cc',
+                             foreground='#ffffff',
+                             ),
+
+                widget.QuickExit(
+                        background='#ff0000',
+                        foreground='ffffff'),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
@@ -210,4 +308,4 @@ wmname = "LG3D"
 
 @hook.subscribe.startup_once
 def autostart_once():
-    subprocess.run('/home/$USER/.config/qtile/autostart.sh')
+    subprocess.run('/home/kaveen/.config/qtile/autostart_once.sh')
