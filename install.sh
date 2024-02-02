@@ -8,10 +8,10 @@ fi
 username=$(id -u -n 1000)
 builddir=$(pwd)
 
-pacman -Syu
+pacman -Syu -y
 
 cd $builddir
-pacman -S qtile git --needed base-devel
+pacman -S qtile git --needed base-devel -y
 
 git clone https://github.com/kaveen-lakmuthu/qtile-config.git
 mv qtile-config/ qtile/
