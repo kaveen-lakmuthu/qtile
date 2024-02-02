@@ -1,4 +1,5 @@
 # Qtile-config,
+![Screenshot](./2023-09-26_18-21.png)
 >Install script file will be available soon. 
 ### 1. First, install the following tools,
     - picom
