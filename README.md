@@ -1,6 +1,6 @@
 # Qtile-config,
 >Install script file will be available soon. 
-## 1. First, install the following tools,
+### 1. First, install the following tools,
     - picom
     - lxsession
     - volumeicon
@@ -12,6 +12,6 @@
     - flameshot
     - light-locker
     - polkit
-## 2. Then clone this Repo.
-## 3. Make 'autostart_once.sh' and 'config.py' executable.
-## 4. Log into Qtile.
+### 2. Then clone this Repo.
+### 3. Make 'autostart_once.sh' and 'config.py' executable.
+### 4. Log into Qtile.
