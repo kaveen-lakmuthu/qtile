@@ -26,7 +26,7 @@ chmod -x /home/$username/.config/qtile/autostart_once.sh
 chmod -X /home/$username/.config/qtile/config.py
 
 pacman -S xorg xorg-xinit xorg-server -y
-pacman -S alacritty firefox nitrogen polkit volumeicon dunst picon lxsession redshift blueman xfce4-power-manager light-locker flameshot network-manager-applet ttf-font-awesome lightdm -y
+pacman -S alacritty firefox nitrogen polkit volumeicon dunst picom lxsession redshift blueman xfce4-power-manager light-locker flameshot network-manager-applet ttf-font-awesome lightdm -y
 pacman -S thunar neofetch htop dmenu unzip wget vim -y
 
 touch ~/.xinitrc
