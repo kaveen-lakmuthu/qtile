@@ -1,5 +1,14 @@
 # Kaveen Lakmuthu's Qtile Config File
-
+#    _   __                             _           _                    _   _           
+#   | | / /                            | |         | |                  | | | |          
+#   | |/ /  __ ___   _____  ___ _ __   | |     __ _| | ___ __ ___  _   _| |_| |__  _   _ 
+#   |    \ / _` \ \ / / _ \/ _ \ '_ \  | |    / _` | |/ / '_ ` _ \| | | | __| '_ \| | | |
+#   | |\  \ (_| |\ V /  __/  __/ | | | | |___| (_| |   <| | | | | | |_| | |_| | | | |_| |
+#   \_| \_/\__,_| \_/ \___|\___|_| |_| \_____/\__,_|_|\_\_| |_| |_|\__,_|\__|_| |_|\__,_|
+#
+#
+#
+#
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -7,6 +16,7 @@ from libqtile.utils import guess_terminal
 import os
 import subprocess
 from libqtile import hook
+from qtile_extras.widget.decorations import BorderDecoration, _Decoration, RectDecoration
 
 mod = "mod4"
 terminal = "alacritty"
@@ -56,7 +66,8 @@ keys = [
     # Run apps
     Key([mod], "f", lazy.spawn('firefox')),
     Key([mod], "t", lazy.spawn('thunar')),
-    Key([mod], "d", lazy.spawn('rofi -show drun')),
+    #Key([mod], "d", lazy.spawn('rofi -show drun')),
+    Key([mod], "d", lazy.spawn('dmenu_run')),
     Key([], "Print", lazy.spawn('flameshot gui')),
 
     # Media
@@ -125,8 +136,8 @@ for i in groups:
     )
 
     layout_theme={
-        "border_width": 4,
-        "margin" : 15,
+        "border_width": 2,
+        "margin" : 5,
         "border_focus": "#9900cc",
         "border_normal": "#666699"
         }
@@ -150,10 +161,18 @@ layouts = [
 
 widget_defaults = dict(
     font="sans",
-    fontsize=12,
+    fontsize=10,
     padding=3,
     background='#666699',
 )
+
+decoration_group = {
+    "decorations": [
+        RectDecoration(colour="#004040", radius=10, filled=True, padding_y=4, group=True),
+    ],
+    "padding": 10,
+}
+
 extension_defaults = widget_defaults.copy()
 
 screens = [
@@ -223,6 +242,7 @@ screens = [
                 widget.Clock(format="%d-%m-%Y %a %H:%M:%S",
                              background='#9900cc',
                              foreground='#ffffff',
+                             **decoration_group
                              ),
 
                 widget.QuickExit(
