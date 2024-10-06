@@ -16,7 +16,7 @@ from libqtile.utils import guess_terminal
 import os
 import subprocess
 from libqtile import hook
-from qtile_extras.widget.decorations import BorderDecoration, _Decoration, RectDecoration
+# from qtile_extras.widget.decorations import BorderDecoration, _Decoration, RectDecoration
 
 mod = "mod4"
 terminal = "alacritty"
