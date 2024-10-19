@@ -39,7 +39,7 @@ polkit &
 - `autostart_once.sh` file is called on `config.py` file.
 ```
 def autostart_once():
-    subprocess.run('/home/kaveen/.config/qtile/autostart_once.sh')
+    subprocess.run('~/.config/qtile/autostart_once.sh')
 ```
 - Replace `kaveen` with your username.
 > [!IMPORTANT]
